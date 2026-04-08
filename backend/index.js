@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
 app.use(express.json());
 
+// GET http://localhost:5000/uploads/cover-xxx.jpg
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
