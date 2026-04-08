@@ -5,14 +5,13 @@ import { register } from "../../api/auth";
 import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-  const { saveAuth, user } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       navigate(user.role === "LIBRARIAN" ? "/librarian" : "/member", { replace: true });
@@ -50,10 +49,9 @@ export default function RegisterPage() {
     }
     setLoading(true);
     try {
-      const res = await register({ ...form, role: "MEMBER" });
-      saveAuth(res.data.user, res.data.token);
-      toast.success("Registration successful!");
-      navigate("/member");
+      await register({ ...form, role: "MEMBER" });
+      toast.success("Registration successful! Please sign in.");
+      navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     } finally {

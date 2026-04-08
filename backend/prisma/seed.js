@@ -7,15 +7,27 @@ async function main() {
   const hashedPassword = await bcrypt.hash("password123", 10);
 
   await prisma.user.upsert({
-    where: { email: "Librarian@library.com" },
-    update: {},
-    create: { name: "Librarian", email: "Librarian@library.com", password: hashedPassword, role: "LIBRARIAN" },
+    where: { email: "librarian@library.com" },
+    update: { isActive: true },
+    create: {
+      name: "Librarian",
+      email: "librarian@library.com",
+      password: hashedPassword,
+      role: "LIBRARIAN",
+      isActive: true,
+    },
   });
 
   await prisma.user.upsert({
-    where: { email: "Russel@library.com" },
-    update: {},
-    create: { name: "Russel Figo", email: "Russel@library.com", password: hashedPassword, role: "MEMBER" },
+    where: { email: "russel@library.com" },
+    update: { isActive: true },
+    create: {
+      name: "Russel Figo",
+      email: "russel@library.com",
+      password: hashedPassword,
+      role: "MEMBER",
+      isActive: true,
+    },
   });
 
   const books = [
