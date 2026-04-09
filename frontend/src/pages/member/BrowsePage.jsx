@@ -7,7 +7,7 @@ const BRAND = "#d2c1b7";
 const BRAND_DARK = "#a08070";
 const BRAND_TEXT = "#5c3d2e";
 
-// ── Book Detail Modal ─────────────────────────────────────────────────────────
+// Book Detail Modal
 function BookDetailModal({ book, onClose, onBorrow, borrowingId }) {
   const available = book.stock > 0;
   const isLoading = borrowingId === book.id;
@@ -224,7 +224,7 @@ function BorrowConfirmModal({ book, onClose, onConfirm, isLoading }) {
     </div>
   );
 }
-// ── Browse Page ───────────────────────────────────────────────────────────────
+// Browse Page 
 export default function BrowsePage() {
   const [books, setBooks]                 = useState([]);
   const [genres, setGenres]               = useState([]);

@@ -20,6 +20,12 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function daysSince(dateStr) {
+  if (!dateStr) return 0;
+  const diff = Date.now() - new Date(dateStr).getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
 function HistoryCard({ record, onReturn, returningId }) {
   const status = STATUS_CONFIG[record.status];
   const isReturning = returningId === record.id;
@@ -31,7 +37,7 @@ function HistoryCard({ record, onReturn, returningId }) {
       onMouseLeave={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(160,128,112,0.08)"}
     >
       {/* Book cover */}
-      <div className="w-14 flex-shrink-0 rounded-xl overflow-hidden" style={{ height: 80, background: BRAND }}>
+      <div className="w-14 shrink-0 rounded-xl overflow-hidden" style={{ height: 80, background: BRAND }}>
         {record.book?.coverUrl ? (
           <img src={record.book.coverUrl} alt={record.book.title} className="w-full h-full object-cover" />
         ) : (
@@ -51,7 +57,7 @@ function HistoryCard({ record, onReturn, returningId }) {
             <p className="font-bold text-slate-800 text-sm truncate">{record.book?.title}</p>
             <p className="text-xs mt-0.5" style={{ color: BRAND_DARK }}>{record.book?.author}</p>
           </div>
-          <span className={`text-xs font-bold px-3 py-1 rounded-full flex-shrink-0 ${status?.className}`}>
+          <span className={`text-xs font-bold px-3 py-1 rounded-full shrink-0 ${status?.className}`}>
             {status?.label}
           </span>
         </div>
@@ -74,6 +80,92 @@ function HistoryCard({ record, onReturn, returningId }) {
             {isReturning ? "Returning..." : "Return Book"}
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+function CurrentlyBorrowingSection({ records, onReturn, returningId }) {
+  const active = records.filter((r) => r.status === "APPROVED");
+  if (active.length === 0) return null;
+
+  return (
+    <div className="mb-8">
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#5c3d2e" }} />
+        <h2 className="text-sm font-bold" style={{ color: "#5c3d2e" }}>
+          Currently Borrowing · {active.length} book{active.length > 1 ? "s" : ""}
+        </h2>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {active.map((record) => {
+          const days = daysSince(record.borrowedAt);
+          const isReturning = returningId === record.id;
+
+          return (
+            <div key={record.id}
+              className="bg-white rounded-2xl overflow-hidden transition-all duration-200"
+              style={{
+                border: `1.5px solid #d2c1b7`,
+                boxShadow: "0 2px 12px rgba(160,128,112,0.12)"
+              }}
+            >
+              {/* Top strip */}
+              <div className="h-1.5 w-full" style={{ background: "linear-gradient(90deg, #5c3d2e, #d2c1b7)" }} />
+
+              <div className="p-4 flex gap-3">
+                {/* Cover */}
+                <div className="w-12 h-16 rounded-lg overflow-hidden flex-shrink-0" style={{ background: "#d2c1b7" }}>
+                  {record.book?.coverUrl ? (
+                    <img src={record.book.coverUrl} alt={record.book.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center"
+                      style={{ background: "linear-gradient(135deg, #d2c1b7, #a08070)" }}>
+                      <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-slate-800 text-sm truncate">{record.book?.title}</p>
+                  <p className="text-xs mt-0.5 truncate" style={{ color: "#a08070" }}>{record.book?.author}</p>
+
+                  {/* Countdown */}
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#a08070" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-xs font-semibold" style={{ color: "#5c3d2e" }}>
+                      {days === 0 ? "Borrowed today" : `${days} day${days > 1 ? "s" : ""} ago`}
+                    </span>
+                  </div>
+                  <p className="text-xs mt-0.5" style={{ color: "#a08070" }}>
+                    since {formatDate(record.borrowedAt)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Return button */}
+              <div className="px-4 pb-4">
+                <button
+                  onClick={() => onReturn(record.id)}
+                  disabled={isReturning}
+                  className="w-full py-2 rounded-xl text-xs font-bold text-white transition disabled:opacity-50"
+                  style={{ background: "#5c3d2e" }}
+                  onMouseEnter={e => { if (!isReturning) e.currentTarget.style.background = "#7a5242"; }}
+                  onMouseLeave={e => { if (!isReturning) e.currentTarget.style.background = "#5c3d2e"; }}
+                >
+                  {isReturning ? "Returning..." : "Return Book"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -135,6 +227,14 @@ export default function MyHistoryPage() {
       </div>
 
       <div className="px-8 py-8">
+        {/* Currently Borrowing Section */}
+        {(statusFilter === "ALL" || statusFilter === "APPROVED") && !loading && (
+          <CurrentlyBorrowingSection
+            records={records}
+            onReturn={handleReturn}
+            returningId={returningId}
+          />
+        )}
 
         {/* Status filter pills */}
         <div className="flex flex-wrap gap-2 mb-6">
