@@ -18,7 +18,7 @@ function validate(form) {
   return errors;
 }
 
-// ── Cover Preview ─────────────────────────────────────────────────────────────
+// Cover Preview
 function CoverPreview({ src }) {
   const [imgStatus, setImgStatus] = useState("idle");
 
@@ -60,7 +60,7 @@ function CoverPreview({ src }) {
   );
 }
 
-// ── Book Modal ────────────────────────────────────────────────────────────────
+// Book Modal
 function BookModal({ book, onClose, onSaved }) {
   const isEdit      = !!book?.id;
   const fileInputRef = useRef(null);

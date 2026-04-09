@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ── Upload directory ────────────────────────────────────────────────────────
-const uploadDir = path.join(__dirname, "../uploads");
+const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 // ── Multer config ───────────────────────────────────────────────────────────
@@ -35,11 +35,9 @@ export const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB
 });
 
-// ── Helper: build public URL from filename ──────────────────────────────────
-const coverUrl = (req, filename) =>
-  filename ? `${req.protocol}://${req.get("host")}/uploads/${filename}` : null;
+const coverUrl = (_req, filename) =>
+  filename ? `/uploads/${filename}` : null;
 
-// ── Helper: delete old cover file from disk ─────────────────────────────────
 const deleteOldCover = (existingCoverUrl) => {
   if (!existingCoverUrl) return;
   try {
@@ -53,8 +51,6 @@ const deleteOldCover = (existingCoverUrl) => {
     console.warn("Could not delete old cover file");
   }
 };
-
-// ── Controllers ─────────────────────────────────────────────────────────────
 
 export const getBooks = async (req, res) => {
   try {
