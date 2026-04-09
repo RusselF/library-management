@@ -1,4 +1,4 @@
-# 📚 Library Book Management System
+# Library Book Management System
 
 A full-stack library management system with role-based access control for Librarians and Members.
 
