@@ -7,11 +7,11 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ── Upload directory ────────────────────────────────────────────────────────
+// Upload directory
 const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-// ── Multer config ───────────────────────────────────────────────────────────
+// Multer config
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),
   filename: (_req, file, cb) => {
@@ -98,7 +98,7 @@ export const getBook = async (req, res) => {
 
 export const createBook = async (req, res) => {
   try {
-    const { title, author, isbn, genre, publishedYear, stock, coverUrl: coverUrlInput } = req.body;
+    const { title, author, isbn, genre, publishedYear, stock, coverUrl: coverUrlInput, description } = req.body;
 
     const existing = await prisma.book.findUnique({ where: { isbn } });
     if (existing) {
@@ -121,6 +121,7 @@ export const createBook = async (req, res) => {
         publishedYear: parseInt(publishedYear),
         stock: parseInt(stock),
         coverUrl: finalCoverUrl,
+        description: description || null,
       },
     });
 
@@ -133,7 +134,7 @@ export const createBook = async (req, res) => {
 
 export const updateBook = async (req, res) => {
   try {
-    const { title, author, isbn, genre, publishedYear, stock, coverUrl: coverUrlInput } = req.body;
+    const { title, author, isbn, genre, publishedYear, stock, coverUrl: coverUrlInput, description } = req.body;
     const id = parseInt(req.params.id);
 
     const existing = await prisma.book.findUnique({ where: { id } });
@@ -165,6 +166,7 @@ export const updateBook = async (req, res) => {
         publishedYear: parseInt(publishedYear),
         stock: parseInt(stock),
         coverUrl: finalCoverUrl,
+        description: description ?? existing.description,
       },
     });
 

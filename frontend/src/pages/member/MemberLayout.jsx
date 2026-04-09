@@ -57,11 +57,11 @@ export default function MemberLayout() {
   return (
     <div className="flex h-screen bg-[#f5f5f0] overflow-hidden">
       {/* ── Sidebar ── */}
-      <aside className="w-64 bg-white flex flex-col py-8 px-5 shadow-sm shrink-0">
+      <aside className="w-64 flex flex-col py-8 px-5 shrink-0" style={{ background: "#f5ede8", borderRight: "1px solid #e8d8d0" }}>
 
         {/* Logo */}
         <div className="flex items-center gap-3 mb-10">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "#5c3d2e" }}>
             <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
@@ -79,11 +79,10 @@ export default function MemberLayout() {
               end={item.end}
               className={({ isActive }) =>
                 `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                  isActive ? "text-white shadow-sm" : "text-slate-600 hover:bg-white/60 hover:text-slate-800"
                 }`
               }
+              style={({ isActive }) => isActive ? { background: "#5c3d2e" } : {}}
             >
               {item.icon}
               {item.label}
@@ -107,7 +106,7 @@ export default function MemberLayout() {
         {/* Bottom: user info only (no logout here) */}
         <div className="border-t border-slate-100 pt-5 px-1">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ background: "#5c3d2e" }}>
               {initials}
             </div>
             <div className="min-w-0">

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { getBooks, createBook, updateBook, deleteBook } from "../../api/books";
 import toast from "react-hot-toast";
 
-const EMPTY_FORM = { title: "", author: "", isbn: "", genre: "", publishedYear: "", stock: "", coverUrl: "" };
+const EMPTY_FORM = { title: "", author: "", isbn: "", genre: "", publishedYear: "", stock: "", coverUrl: "", description: ""  };
 
 function validate(form) {
   const errors = {};
@@ -181,7 +181,7 @@ function BookModal({ book, onClose, onSaved }) {
           <div className="flex gap-6">
 
             {/* Left — Preview + upload controls */}
-            <div className="w-48 flex-shrink-0 flex flex-col gap-3">
+            <div className="w-48 shrink-0 flex flex-col gap-3">
               <p className="text-xs font-semibold text-slate-500">Cover Preview</p>
               <CoverPreview src={previewSrc} />
 
@@ -262,6 +262,22 @@ function BookModal({ book, onClose, onSaved }) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Description */}
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-500 mb-1.5">
+              Description
+              <span className="ml-1 font-normal text-slate-400">(optional)</span>
+            </label>
+            <textarea
+              name="description"
+              value={form.description || ""}
+              onChange={handleChange}
+              placeholder="Brief summary of the book..."
+              rows={3}
+              className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            />
           </div>
 
           {/* Actions */}
