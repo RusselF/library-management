@@ -94,7 +94,7 @@ function BookDetailModal({ book, onClose, onBorrow, borrowingId }) {
               Close
             </button>
             <button
-              onClick={() => { onBorrow(book.id); onClose(); }}
+              onClick={() => { onClose(); onBorrow(book.id); }}
               disabled={!available || isLoading}
               className="flex-1 py-3 rounded-2xl text-sm font-bold text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: available ? BRAND_TEXT : "#94a3b8" }}>
@@ -107,7 +107,7 @@ function BookDetailModal({ book, onClose, onBorrow, borrowingId }) {
   );
 }
 
-// ── Book Card ─────────────────────────────────────────────────────────────────
+// Book Card
 function BookCard({ book, onClick }) {
   const available = book.stock > 0;
 
@@ -157,6 +157,73 @@ function BookCard({ book, onClick }) {
   );
 }
 
+function BorrowConfirmModal({ book, onClose, onConfirm, isLoading }) {
+  useEffect(() => {
+    const handleKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 px-4"
+      style={{ backgroundColor: "rgba(44,28,20,0.55)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Book info */}
+        <div className="flex gap-4 mb-5">
+          <div className="w-14 h-20 rounded-xl overflow-hidden flex-shrink-0" style={{ background: "#d2c1b7" }}>
+            {book.coverUrl ? (
+              <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, #d2c1b7, #a08070)" }}>
+                <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#a08070" }}>{book.genre}</p>
+            <p className="font-bold text-slate-800 leading-snug">{book.title}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{book.author}</p>
+            <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold"
+              style={{ background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0" }}>
+              {book.stock} left
+            </div>
+          </div>
+        </div>
+
+        <p className="text-sm text-slate-500 mb-6">
+          Submit a borrow request for this book? The librarian will review and approve it shortly.
+        </p>
+
+        <div className="flex gap-3">
+          <button onClick={onClose}
+            className="flex-1 py-3 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition"
+            style={{ border: "1.5px solid #d2c1b7" }}>
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="flex-1 py-3 rounded-2xl text-sm font-bold text-white transition disabled:opacity-50"
+            style={{ background: "#5c3d2e" }}
+            onMouseEnter={e => { if (!isLoading) e.currentTarget.style.background = "#7a5242"; }}
+            onMouseLeave={e => { if (!isLoading) e.currentTarget.style.background = "#5c3d2e"; }}
+          >
+            {isLoading ? "Requesting..." : "Yes, Borrow"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 // ── Browse Page ───────────────────────────────────────────────────────────────
 export default function BrowsePage() {
   const [books, setBooks]                 = useState([]);
@@ -169,6 +236,7 @@ export default function BrowsePage() {
   const [page, setPage]                   = useState(1);
   const [selectedBook, setSelectedBook]   = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [confirmBook, setConfirmBook] = useState(null);
   const mainRef = useRef(null);
 
   const fetchBooks = useCallback(async () => {
@@ -205,11 +273,19 @@ export default function BrowsePage() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleBorrow = async (bookId) => {
-    setBorrowingId(bookId);
+  const handleBorrow = (bookId) => {
+    const book = books.find((b) => b.id === bookId);
+    setConfirmBook(book);
+  };
+
+  // Tambah handler baru untuk actual request:
+  const handleConfirmBorrow = async () => {
+    if (!confirmBook) return;
+    setBorrowingId(confirmBook.id);
     try {
-      await requestBorrow(bookId);
+      await requestBorrow(confirmBook.id);
       toast.success("Borrow request submitted!");
+      setConfirmBook(null);
       fetchBooks();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to submit request");
@@ -225,7 +301,7 @@ export default function BrowsePage() {
       acc.push(p);
       return acc;
     }, []);
-
+    
   return (
     <div ref={mainRef} className="min-h-screen overflow-y-auto" style={{ background: "#f9f5f2" }}>
 
@@ -385,6 +461,16 @@ export default function BrowsePage() {
           onClose={() => setSelectedBook(null)}
           onBorrow={handleBorrow}
           borrowingId={borrowingId}
+        />
+      )}
+
+      {/* Borrow Confirm Modal */}
+      {confirmBook && (
+        <BorrowConfirmModal
+          book={confirmBook}
+          onClose={() => setConfirmBook(null)}
+          onConfirm={handleConfirmBorrow}
+          isLoading={borrowingId === confirmBook.id}
         />
       )}
     </div>
