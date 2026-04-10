@@ -9,6 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,6 +30,7 @@ export default function LoginPage() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: name === "email" ? value.toLowerCase() : value });
     if (errors[name]) setErrors({ ...errors, [name]: "" });
+    if (serverError) setServerError("");
   };
 
   const handleSubmit = async (e) => {
@@ -42,7 +44,7 @@ export default function LoginPage() {
       toast.success("Login successful!");
       navigate(res.data.user.role === "LIBRARIAN" ? "/librarian" : "/member");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      setServerError(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -64,13 +66,6 @@ export default function LoginPage() {
             </svg>
           </div>
           <span className="text-white font-bold text-lg tracking-tight">Library</span>
-        </div>
-
-        {/* Center image placeholder */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-10">
-          <svg className="w-96 h-96 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
         </div>
 
         {/* Bottom tagline */}
@@ -100,19 +95,22 @@ export default function LoginPage() {
           <p className="text-sm text-slate-400 mb-8">Welcome back! Please enter your details.</p>
 
           <form onSubmit={handleSubmit} noValidate className="space-y-4">
+
+            {/* Email */}
             <div>
               <label className="block text-xs font-semibold text-slate-500 mb-1.5">Email Address</label>
               <input
                 type="email" name="email" value={form.email} onChange={handleChange}
                 placeholder="you@example.com"
                 className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition ${
-                  errors.email ? "border-red-300 focus:ring-red-200" : "border-slate-200 focus:ring-amber-100"
+                  errors.email || serverError ? "border-red-300 focus:ring-red-200" : "border-slate-200 focus:ring-amber-100"
                 }`}
                 style={{ background: "white" }}
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-xs font-semibold text-slate-500 mb-1.5">Password</label>
               <div className="relative">
@@ -120,7 +118,7 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"} name="password"
                   value={form.password} onChange={handleChange} placeholder="••••••••"
                   className={`w-full border rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 transition ${
-                    errors.password ? "border-red-300 focus:ring-red-200" : "border-slate-200 focus:ring-amber-100"
+                    errors.password || serverError ? "border-red-300 focus:ring-red-200" : "border-slate-200 focus:ring-amber-100"
                   }`}
                   style={{ background: "white" }}
                 />
@@ -133,8 +131,21 @@ export default function LoginPage() {
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
 
+            {/* Server error */}
+            {serverError && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm"
+                style={{ background: "#fef2f2", border: "1.5px solid #fecaca", color: "#dc2626" }}>
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                {serverError}
+              </div>
+            )}
+
+            {/* Submit */}
             <button type="submit" disabled={loading}
-              className="w-full text-white font-bold py-3 rounded-xl text-sm transition disabled:opacity-50 mt-2"
+              className="w-full text-white font-bold py-3 rounded-xl text-sm transition disabled:opacity-50"
               style={{ background: "#5c3d2e" }}
               onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "#7a5242"; }}
               onMouseLeave={e => { if (!loading) e.currentTarget.style.background = "#5c3d2e"; }}>
