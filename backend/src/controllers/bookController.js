@@ -181,13 +181,13 @@ export const deleteBook = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
-    const activeBorrow = await prisma.borrowRecord.findFirst({
-      where: { bookId: id, status: { in: ["PENDING", "APPROVED"] } },
+    // Jadi:
+    const blockingBorrow = await prisma.borrowRecord.findFirst({
+      where: { bookId: id, status: { in: ["PENDING", "APPROVED", "RETURNED"] } },
     });
-    if (activeBorrow) {
-      return res.status(422).json({ message: "Cannot delete book with active borrow records" });
+    if (blockingBorrow) {
+      return res.status(422).json({ message: "Cannot delete book that has borrow history" });
     }
-
     const book = await prisma.book.findUnique({ where: { id } });
     if (book?.coverUrl?.includes("/uploads/")) {
       deleteOldCover(book.coverUrl);

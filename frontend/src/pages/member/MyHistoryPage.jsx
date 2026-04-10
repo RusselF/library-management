@@ -117,7 +117,7 @@ function CurrentlyBorrowingSection({ records, onReturn, returningId }) {
 
               <div className="p-4 flex gap-3">
                 {/* Cover */}
-                <div className="w-12 h-16 rounded-lg overflow-hidden flex-shrink-0" style={{ background: "#d2c1b7" }}>
+                <div className="w-12 h-16 rounded-lg overflow-hidden shrink-0" style={{ background: "#d2c1b7" }}>
                   {record.book?.coverUrl ? (
                     <img src={record.book.coverUrl} alt={record.book.title} className="w-full h-full object-cover" />
                   ) : (
@@ -137,7 +137,7 @@ function CurrentlyBorrowingSection({ records, onReturn, returningId }) {
 
                   {/* Countdown */}
                   <div className="mt-2 flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#a08070" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 shrink-0" style={{ color: "#a08070" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span className="text-xs font-semibold" style={{ color: "#5c3d2e" }}>

@@ -56,7 +56,7 @@ export default function MemberLayout() {
 
   return (
     <div className="flex h-screen bg-[#f5f5f0] overflow-hidden">
-      {/* ── Sidebar ── */}
+      {/*  Sidebar  */}
       <aside className="w-64 flex flex-col py-8 px-5 shrink-0" style={{ background: "#f5ede8", borderRight: "1px solid #e8d8d0" }}>
 
         {/* Logo */}
@@ -89,7 +89,7 @@ export default function MemberLayout() {
             </NavLink>
           ))}
         </div>
-        {/* Logout di bawah tapi masih dalam nav */}
+        {/* Logout */}
         <button
           onClick={handleLogout}
           disabled={loggingOut}
@@ -103,7 +103,7 @@ export default function MemberLayout() {
         </button>
       </nav>
 
-        {/* Bottom: user info only (no logout here) */}
+        {/* Bottom: user info only*/}
         <div className="border-t border-slate-100 pt-5 px-1">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ background: "#5c3d2e" }}>

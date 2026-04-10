@@ -51,7 +51,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex" style={{ background: "#f9f5f2" }}>
 
-      {/* ── Left panel ── */}
+      {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12">
         <img src="/src/assets/frontpic.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0" style={{ background: "rgba(92,61,46,0.55)" }} />
@@ -82,7 +82,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* ── Right panel ── */}
+      {/* Right panel */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
 

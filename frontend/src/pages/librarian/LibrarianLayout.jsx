@@ -76,7 +76,7 @@ export default function LibrarianLayout() {
 
   return (
     <div className="flex h-screen bg-[#f5f5f0] overflow-hidden">
-      {/* ── Sidebar ── */}
+      {/* Sidebar */}
       <aside className="w-56 flex flex-col py-6 px-3 shrink-0" style={{ background: "#f5ede8", borderRight: "1px solid #e8d8d0" }}>
 
         {/* Logo */}
@@ -89,7 +89,7 @@ export default function LibrarianLayout() {
           <span className="text-base font-bold text-slate-800 tracking-tight">Library</span>
         </div>
 
-        {/* Nav links — compact, flush to sidebar */}
+        {/* Nav links */}
         <nav className="flex-1 flex flex-col justify-between">
         {/* Menu atas */}
         <div className="flex flex-col gap-0.5">
@@ -125,7 +125,7 @@ export default function LibrarianLayout() {
         </button>
       </nav>
 
-        {/* Bottom: user info only (no logout here) */}
+        {/* Bottom: user info only */}
         <div className="border-t border-slate-100 pt-4 px-2">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ background: "#5c3d2e" }}>
@@ -139,7 +139,7 @@ export default function LibrarianLayout() {
         </div>
       </aside>
 
-      {/* ── Main content ── */}
+      {/* Main content */}
       <main className="flex-1 overflow-y-auto px-8 py-6">
         <Outlet />
       </main>

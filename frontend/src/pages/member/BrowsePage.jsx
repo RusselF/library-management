@@ -305,7 +305,7 @@ export default function BrowsePage() {
   return (
     <div ref={mainRef} className="min-h-screen overflow-y-auto" style={{ background: "#f9f5f2" }}>
 
-      {/* ── Hero ── */}
+      {/* Hero  */}
       <div className="px-8 pt-10 pb-6" style={{ background: `linear-gradient(160deg, #f0e6df 0%, #f9f5f2 100%)` }}>
         <h1 className="text-3xl font-bold mb-1" style={{ color: BRAND_TEXT }}>What will you read next?</h1>
         <p className="text-sm mb-6" style={{ color: BRAND_DARK }}>Browse and borrow from our collection</p>

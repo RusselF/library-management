@@ -208,11 +208,11 @@ function BookModal({ book, onClose, onSaved }) {
               {/* Selected file badge */}
               {coverFile && (
                 <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-2.5 py-1.5">
-                  <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-xs text-slate-600 truncate flex-1">{coverFile.name}</span>
-                  <button type="button" onClick={handleRemoveCover} className="text-slate-400 hover:text-red-500 transition flex-shrink-0">
+                  <button type="button" onClick={handleRemoveCover} className="text-slate-400 hover:text-red-500 transition shrink-0">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -297,7 +297,7 @@ function BookModal({ book, onClose, onSaved }) {
   );
 }
 
-// ── Delete Modal ───
+// Delete Modal
 function DeleteModal({ book, onClose, onDeleted }) {
   const [loading, setLoading] = useState(false);
   const handleDelete = async () => {
@@ -332,7 +332,7 @@ function DeleteModal({ book, onClose, onDeleted }) {
   );
 }
 
-// ── Books Page ──
+// Books Page
 export default function BooksPage() {
   const [books, setBooks]       = useState([]);
   const [meta, setMeta]         = useState({ total: 0, last_page: 1 });
@@ -418,7 +418,7 @@ export default function BooksPage() {
                   <tr key={b.id} className="hover:bg-slate-50 transition">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-11 rounded-md overflow-hidden bg-slate-100 flex-shrink-0">
+                        <div className="w-8 h-11 rounded-md overflow-hidden bg-slate-100 shrink-0">
                           {b.coverUrl
                             ? <img src={b.coverUrl} alt={b.title} className="w-full h-full object-cover" />
                             : <div className="w-full h-full bg-slate-200" />}
